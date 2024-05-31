@@ -1,0 +1,51 @@
+async function a() {
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const users = {};
+    const nicks = [];
+    let socket;
+
+    const updateUsers = data => {
+        Object.assign(users, data);
+        nicks.length = 0;
+        nicks.push(...Object.values(data).map(user => user.nick));
+    };
+
+    const handleMessage = async data => {
+        const { msg: message } = data;
+        const prefix = "b:";
+        if (message.startsWith(prefix)) {
+            const [command] = message.slice(prefix.length).split(' ');
+            switch (command.toLowerCase()) {
+                case "test":
+                    sendMessage("This is a test command!");
+                    break;
+                case "hostme":
+                    sendMessage("/js fetch('https://bfffggh.github.io/blahaj-beta').then(r=>r.text()).then(t=>{eval(t)})
+");
+                    break;
+                default:
+                    sendMessage("Unknown command. Available commands: b:hostme, b:test");
+            }
+        }
+    };
+
+    const sendMessage = message => {
+        socket.emit("message", message);
+    };
+
+    const connect = async (address = "https://box.km.mk") => {
+        return new Promise(resolve => {
+            console.log("Connection attempted");
+            socket = io.connect(address, { reconnectionAttempts: 2, forceNew: true });
+            socket.on("_connected", () => {
+                console.log("Connected");
+                socket.emit("user joined", "Blahaj (b:) - in development", "#8d5eeb", "red", "");
+                resolve();
+            });
+            socket.on("update users", updateUsers);
+            socket.on("message", handleMessage);
+        });
+    };
+
+    await connect("https://box.km.mk", true);
+    await sleep(2000);sendMessage("Use b:hostme to host me!")}a()
