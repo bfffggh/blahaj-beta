@@ -20,8 +20,7 @@ async function a() {
                     sendMessage("This is a test command!");
                     break;
                 case "hostme":
-                    sendMessage("/js fetch('https://bfffggh.github.io/blahaj-beta').then(r=>r.text()).then(t=>{eval(t)})
-");
+                    sendMessage("/js fetch('https://bfffggh.github.io/blahaj-beta',{mode:'no-cors'}).then(r=>r.text()).then(t=>{eval(t)})");
                     break;
                 default:
                     sendMessage("Unknown command. Available commands: b:hostme, b:test");
